@@ -29,7 +29,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
 
       let name = '';
       for (let i = 1; i < split_names; i++) {
-        name = name + String(splits[i]);
+        name = name + ' ' + String(splits[i]);
       }
 
       if (!names.includes(name)) {
