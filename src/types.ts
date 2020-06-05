@@ -5,7 +5,3 @@ export interface PlotlyOptions {
   showSeriesCount: boolean;
   seriesCountSize: SeriesSize;
 }
-
-export interface SDictionary {
-  [index: string]: number[];
-}

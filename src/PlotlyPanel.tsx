@@ -1,6 +1,6 @@
 import React from 'react';
 import { PanelProps, GrafanaTheme } from '@grafana/data';
-import { PlotlyOptions, SDictionary } from 'types';
+import { PlotlyOptions } from 'types';
 import Plot from 'react-plotly.js';
 import defaults from 'lodash/defaults';
 import { useTheme } from '@grafana/ui';
@@ -14,7 +14,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   let yaxis: number[] = [];
   let names: string[] = [];
   let bin_num: any[] = [];
-  var counts = {} as SDictionary;
+  let counts: { [id: string]: number[] } = {};
 
   for (const series of data.series) {
     const { timeField } = getTimeField(series);
@@ -44,13 +44,16 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         if (field.type !== FieldType.number) {
           continue;
         }
+        console.log(series.length);
         for (let i = 0; i < series.length; i++) {
           yaxis.push(field.values.get(i));
         }
         let quantity = yaxis.reduce(function(a, b) {
           return a + b;
         });
-        console.log(!(String(series.name) in counts));
+        console.log(quantity);
+        console.log(series.name);
+        console.log(counts);
         if (!(String(series.name) in counts)) {
           counts[name] = [];
         }
