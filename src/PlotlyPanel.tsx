@@ -26,6 +26,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
       if (!bin_num.includes(Number(splits[split_names - 1]))) {
         bin_num.push(Number(splits[split_names - 1]));
       }
+      console.log('bin push');
 
       let name = '';
       for (let i = 0; i < split_names - 1; i++) {
@@ -35,6 +36,8 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
       if (!names.includes(name)) {
         names.push(name);
       }
+
+      console.log('names push');
 
       if (!timeField) {
         continue;
@@ -50,7 +53,11 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         let quantity = yaxis.reduce(function(a, b) {
           return a + b;
         });
+        if (!(String(series.name) in counts)) {
+          counts[name] = [];
+        }
         counts[name].push(quantity);
+        console.log('counts pushed');
       }
     } else {
       // not bins
