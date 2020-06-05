@@ -11,7 +11,6 @@ interface Props extends PanelProps<PlotlyOptions> {}
 export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) => {
   const theme = useTheme();
 
-  let yaxis: number[] = [];
   let names: string[] = [];
   let bin_num: any[] = [];
   let counts: { [id: string]: number[] } = {};
@@ -45,6 +44,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
           continue;
         }
         console.log(series.length);
+        let yaxis: number[] = [];
         for (let i = 0; i < series.length; i++) {
           yaxis.push(field.values.get(i));
         }
@@ -57,7 +57,9 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         if (!(String(series.name) in counts)) {
           counts[name] = [];
         }
-        counts[name].push(quantity);
+        let copy = counts[name];
+        copy.push(quantity);
+        counts[name] = copy;
       }
     } else {
       // not bins
