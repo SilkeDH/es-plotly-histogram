@@ -59,19 +59,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         copy.push(quantity);
         counts[name] = copy;
       }
-      for (let i = 0; i < names.length; i++) {
-        traces.push({
-          x: bin_num,
-          y: counts[names[i]],
-          name: names[i],
-          type: 'bar',
-        });
-      }
-      layout_mode = {
-        width: width,
-        height: height,
-        barmode: 'stack',
-      };
     } else {
       // no bins
       names.push(String(series.name));
@@ -92,20 +79,34 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         });
         bin_num.push(quantity);
       }
-      traces.push({
-        x: names,
-        y: bin_num,
-        type: 'bar',
-      });
-      layout_mode = {
-        width: width,
-        height: height,
-      };
     }
   }
-  console.log(bin_num);
-  console.log(counts);
-  console.log(names);
+  if (String(data.series[0].name).split(' ').length !== 1) {
+    for (let i = 0; i < names.length; i++) {
+      traces.push({
+        x: bin_num,
+        y: counts[names[i]],
+        name: names[i],
+        type: 'bar',
+      });
+    }
+    layout_mode = {
+      width: width,
+      height: height,
+      barmode: 'stack',
+    };
+  } else {
+    traces.push({
+      x: names,
+      y: bin_num,
+      type: 'bar',
+    });
+    layout_mode = {
+      width: width,
+      height: height,
+    };
+  }
+
   const plotlyData: Plotly.Data[] = traces;
   const plotlyLayout: Partial<Plotly.Layout> = defaults(layout_mode, defaultLayout(theme));
   return <Plot data={plotlyData} layout={plotlyLayout} />;
