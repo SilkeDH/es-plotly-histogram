@@ -51,10 +51,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         let quantity = yaxis.reduce(function(a, b) {
           return a + b;
         });
-        console.log(quantity);
-        console.log(series.name);
-        console.log(counts);
-        if (!(String(series.name) in counts)) {
+        if (!(name in counts)) {
           counts[name] = [];
         }
         let copy = counts[name];
