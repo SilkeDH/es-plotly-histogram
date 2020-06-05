@@ -44,12 +44,13 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         if (field.type !== FieldType.number) {
           continue;
         }
-        for (let i = 0; i < data.series[0].length; i++) {
-          yaxis.push(data.series[0].fields[1].values.get(i));
+        for (let i = 0; i < series.length; i++) {
+          yaxis.push(field.values.get(i));
         }
         let quantity = yaxis.reduce(function(a, b) {
           return a + b;
         });
+        console.log(!(String(series.name) in counts));
         if (!(String(series.name) in counts)) {
           counts[name] = [];
         }
@@ -86,7 +87,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   console.log(names);
 
   let traces: any[] = [];
-  for (let i = 0; i < bin_num.length; i++) {
+  for (let i = 0; i < names.length; i++) {
     traces.push({
       x: bin_num,
       y: counts[names[i]],
@@ -101,6 +102,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
     {
       width: width,
       height: height,
+      barmode: 'stack',
     },
     defaultLayout(theme)
   );
