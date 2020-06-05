@@ -23,21 +23,18 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
     if (split_names !== 1) {
       // bins
       let splits = String(series.name).split(' ');
-      if (!bin_num.includes(Number(splits[split_names - 1]))) {
-        bin_num.push(Number(splits[split_names - 1]));
+      if (!bin_num.includes(Number(splits[0]))) {
+        bin_num.push(Number(splits[0]));
       }
-      console.log('bin push');
 
       let name = '';
-      for (let i = 0; i < split_names - 1; i++) {
+      for (let i = 1; i < split_names; i++) {
         name = name + String(splits[i]);
       }
 
       if (!names.includes(name)) {
         names.push(name);
       }
-
-      console.log('names push');
 
       if (!timeField) {
         continue;
@@ -57,7 +54,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
           counts[name] = [];
         }
         counts[name].push(quantity);
-        console.log('counts pushed');
       }
     } else {
       // not bins
