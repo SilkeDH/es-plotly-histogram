@@ -13,12 +13,13 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
 
   let names: string[] = [];
   let bin_num: any[] = [];
+  let traces: any[] = [];
+  let layout_mode = {};
   let counts: { [id: string]: number[] } = {};
 
   for (const series of data.series) {
     const { timeField } = getTimeField(series);
     let split_names = String(series.name).split(' ').length; //length of series name
-
     if (split_names !== 1) {
       // bins
       let splits = String(series.name).split(' ');
@@ -58,10 +59,22 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         copy.push(quantity);
         counts[name] = copy;
       }
+      for (let i = 0; i < names.length; i++) {
+        traces.push({
+          x: bin_num,
+          y: counts[names[i]],
+          name: names[i],
+          type: 'bar',
+        });
+      }
+      layout_mode = {
+        width: width,
+        height: height,
+        barmode: 'stack',
+      };
     } else {
-      // not bins
+      // no bins
       names.push(String(series.name));
-      bin_num.push(String(series.name));
       if (!timeField) {
         continue;
       }
@@ -70,45 +83,31 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         if (field.type !== FieldType.number) {
           continue;
         }
-        for (let i = 0; i < data.series[0].length; i++) {
-          yaxis.push(data.series[0].fields[1].values.get(i));
+        let yaxis: number[] = [];
+        for (let i = 0; i < series.length; i++) {
+          yaxis.push(field.values.get(i));
         }
         let quantity = yaxis.reduce(function(a, b) {
           return a + b;
         });
-        if (!(String(series.name) in counts)) {
-          counts[String(series.name)] = [];
-        }
-        counts[String(series.name)].push(quantity);
+        bin_num.push(quantity);
       }
+      traces.push({
+        x: names,
+        y: bin_num,
+        type: 'bar',
+      });
+      layout_mode = {
+        width: width,
+        height: height,
+      };
     }
   }
-
   console.log(bin_num);
   console.log(counts);
   console.log(names);
-
-  let traces: any[] = [];
-  for (let i = 0; i < names.length; i++) {
-    traces.push({
-      x: bin_num,
-      y: counts[names[i]],
-      name: names[i],
-      type: 'bar',
-    });
-  }
-
   const plotlyData: Plotly.Data[] = traces;
-
-  const plotlyLayout: Partial<Plotly.Layout> = defaults(
-    {
-      width: width,
-      height: height,
-      barmode: 'stack',
-    },
-    defaultLayout(theme)
-  );
-
+  const plotlyLayout: Partial<Plotly.Layout> = defaults(layout_mode, defaultLayout(theme));
   return <Plot data={plotlyData} layout={plotlyLayout} />;
 };
 
