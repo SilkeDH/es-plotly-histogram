@@ -107,22 +107,27 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
     };
   }
 
+  // defaultLayout resets the Plotly layout to work better with the Grafana theme.
+  const defaultLayout = (theme: GrafanaTheme) => ({
+    xaxis: {
+      title: options.XaxisLabel,
+    },
+    yaxis: {
+      title: options.YaxisLabel,
+    },
+    margin: {
+      r: 40,
+      l: 40,
+      t: 40,
+      b: 40,
+    },
+    plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
+    paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
+    font: {
+      color: theme.isDark ? theme.palette.white : theme.palette.black,
+    },
+  });
   const plotlyData: Plotly.Data[] = traces;
   const plotlyLayout: Partial<Plotly.Layout> = defaults(layout_mode, defaultLayout(theme));
   return <Plot data={plotlyData} layout={plotlyLayout} />;
 };
-
-// defaultLayout resets the Plotly layout to work better with the Grafana theme.
-const defaultLayout = (theme: GrafanaTheme) => ({
-  margin: {
-    r: 40,
-    l: 40,
-    t: 40,
-    b: 40,
-  },
-  plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
-  paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
-  font: {
-    color: theme.isDark ? theme.palette.white : theme.palette.black,
-  },
-});

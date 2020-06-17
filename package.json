@@ -1,5 +1,5 @@
 {
-  "name": "grafana-plotly",
+  "name": "histogram-panel",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -8,16 +8,17 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch"
   },
-  "repository": "github:grafana/simple-react-panel",
-  "author": "Marcus Olsson",
+  "repository": "github:SilkeDH/es-plotly-histogram",
+  "author": "Silke Donayre",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/grafana/simple-react-panel/issues",
-    "email": "plugins@grafana.com"
+    "url": "https://github.com/SilkeDH/es-plotly-histogram/issues",
+    "email": "silke.holtz@student.kit.edu"
   },
   "devDependencies": {
     "@grafana/data": "7.0.1",
     "@grafana/toolkit": "7.0.1",
+    "@grafana/runtime":"7.0.1",
     "@grafana/ui": "7.0.1",
     "@types/lodash": "^4.14.154",
     "emotion": "10.0.27"

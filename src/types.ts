@@ -1,7 +1,11 @@
-type SeriesSize = 'sm' | 'md' | 'lg';
-
 export interface PlotlyOptions {
-  text: string;
-  showSeriesCount: boolean;
-  seriesCountSize: SeriesSize;
+  mode: boolean;
+  btseries: number;
+  showLegend: boolean;
+  labelAngle: number;
+  margin: number;
+  selecField: string;
+  bgColor: string;
+  YaxisLabel: string;
+  XaxisLabel: string;
 }

@@ -1,11 +1,11 @@
 {
   "type": "panel",
-  "name": "plotly",
-  "id": "grafana-plotly",
+  "name": "Histogram",
+  "id": "histogram-panel",
   "info": {
-    "description": "",
+    "description": "Simple panel to display Histrograms.",
     "author": {
-      "name": "Marcus Olsson",
+      "name": "Silke Donayre",
       "url": ""
     },
     "keywords": [],
@@ -16,11 +16,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/simple-react-panel"
+        "url": "https://github.com/SilkeDH/es-plotly-histogram"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+        "url": "https://github.com/SilkeDH/es-plotly-histogram/blob/master/LICENSE"
       }
     ],
     "screenshots": [],
@@ -28,7 +28,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaVersion": "6.3.x",
+    "grafanaVersion": "7.0.x",
     "plugins": []
   }
 }
