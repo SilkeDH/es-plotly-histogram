@@ -1,9 +1,10 @@
 import React from 'react';
 import { PanelOptionsEditorBuilder, GrafanaTheme } from '@grafana/data';
-import { ColorPicker, Input, Icon, Button, stylesFactory } from '@grafana/ui';
+import { ColorPicker, Input, Icon, Button, stylesFactory, Select } from '@grafana/ui';
 import { config } from '@grafana/runtime';
 import { css } from 'emotion';
 import { PlotlyOptions } from './types';
+import { generateOptions } from './PlotlyPanel';
 
 export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>) => {
   builder
@@ -33,37 +34,35 @@ export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>
       path: 'margin',
       name: 'X-Axis Label margin',
       description: 'Adds a margin to the X-Axis labels if the names are too long.',
-      defaultValue: 0,
+      defaultValue: 40,
     });
-
   addEditor(builder);
 };
-
-//const data: string[]= ['atlas', 'alice', 'auger', 'cms', 'belle'];
 
 function addEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
   const category = ['Series Editor'];
   builder
-    .addSelect({
+    .addCustomEditor({
       category,
+      id: 'selectField',
       path: 'selectField',
       name: 'Select field',
-      settings: {
-        options: [
-          {
-            value: 'sm',
-            label: 'Small',
-          },
-          {
-            value: 'md',
-            label: 'Medium',
-          },
-          {
-            value: 'lg',
-            label: 'Large',
-          },
-        ],
+      editor: props => {
+        const styles = getStyles(config.theme);
+        return (
+          <div>
+            <Select
+              options={generateOptions()}
+              value={props.value}
+              onChange={v => {
+                props.onChange(v);
+              }}
+              prefix={<Icon className={styles.trashIcon} name="sync" onClick={() => props.onChange(undefined)} />}
+            />
+          </div>
+        );
       },
+      defaultValue: '',
     })
     .addCustomEditor({
       category,
@@ -74,7 +73,6 @@ function addEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
         const styles = getStyles(config.theme);
         let prefix: React.ReactNode = null;
         let suffix: React.ReactNode = null;
-        console.log(props.onChange);
         if (props.value) {
           suffix = <Icon className={styles.trashIcon} name="trash-alt" onClick={() => props.onChange(undefined)} />;
         }
@@ -94,9 +92,7 @@ function addEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
             <Input
               type="text"
               value={props.value || 'Pick Color'}
-              onBlur={(v: any) => {
-                console.log('CLICK');
-              }}
+              onBlur={(v: any) => {}}
               prefix={prefix}
               suffix={suffix}
             />
