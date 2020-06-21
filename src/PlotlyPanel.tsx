@@ -36,13 +36,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
       if (!bin_num.includes(Number(splits[0]))) {
         bin_num.push(Number(splits[0]));
       }
-      let name = '';
-      for (let i = 1; i < split_names; i++) {
-        name = name + ' ' + String(splits[i]);
-      }
-      if (!names.includes(name)) {
-        names.push(name);
-      }
       if (typeof options.selectField !== 'undefined') {
         if (options.selectField.value === name) {
           colors.push(String(options.bgColor));
@@ -66,6 +59,13 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
     const { timeField } = getTimeField(series);
     let splits = String(series.name).split(' ');
     let split_names = String(series.name).split(' ').length; //length of series name
+    let name = '';
+    for (let i = 1; i < split_names; i++) {
+      name = name + ' ' + String(splits[i]);
+    }
+    if (!names.includes(name)) {
+      names.push(name);
+    }
     if (split_names !== 1) {
       if (!timeField) {
         continue;
@@ -83,8 +83,8 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         });
         if (!(name in counts)) {
           counts[name] = [];
+          let copy = counts[name];
           for (let i = 0; i < bin_num.length; i++) {
-            let copy = counts[name];
             if (splits[0] === bin_num[i]) {
               copy.push(quantity);
               counts[name] = copy;
