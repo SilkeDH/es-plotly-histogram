@@ -85,7 +85,9 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
           counts[name] = [];
           let copy = counts[name];
           for (let i = 0; i < bin_num.length; i++) {
-            if (splits[0] === bin_num[i]) {
+            console.log(Number(splits[0]));
+            console.log(bin_num[i]);
+            if (Number(splits[0]) === bin_num[i]) {
               copy.push(quantity);
               counts[name] = copy;
             } else {
