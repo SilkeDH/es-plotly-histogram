@@ -58,10 +58,11 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   for (const series of data.series) {
     const { timeField } = getTimeField(series);
     let splits = String(series.name).split(' ');
+    console.log(splits);
     let split_names = String(series.name).split(' ').length; //length of series name
     let name = '';
     for (let i = 1; i < split_names; i++) {
-      name = name + ' ' + String(splits[i]);
+      name = name + String(splits[i]) + ' ';
     }
     if (!names.includes(name)) {
       names.push(name);
