@@ -29,7 +29,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   let colors: string[] = [];
   let counts: { [id: string]: number[] } = {};
   for (const series of data.series) {
-    const { timeField } = getTimeField(series);
     let split_names = String(series.name).split(' ').length; //length of series name
     if (split_names !== 1) {
       // bins
@@ -51,6 +50,23 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
           colors.push('');
         }
       }
+    } else {
+      // no bins
+      names.push(String(series.name));
+      if (typeof options.selectField !== 'undefined') {
+        if (options.selectField.value === series.name) {
+          colors.push(String(options.bgColor));
+        } else {
+          colors.push('');
+        }
+      }
+    }
+  }
+  for (const series of data.series) {
+    const { timeField } = getTimeField(series);
+    let splits = String(series.name).split(' ');
+    let split_names = String(series.name).split(' ').length; //length of series name
+    if (split_names !== 1) {
       if (!timeField) {
         continue;
       }
@@ -67,25 +83,22 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         });
         if (!(name in counts)) {
           counts[name] = [];
+          for (let i = 0; i < bin_num.length; i++) {
+            let copy = counts[name];
+            if (splits[0] === bin_num[i]) {
+              copy.push(quantity);
+              counts[name] = copy;
+            } else {
+              copy.push(0);
+              counts[name] = copy;
+            }
+          }
         }
-        let copy = counts[name];
-        copy.push(quantity);
-        counts[name] = copy;
       }
     } else {
-      // no bins
-      names.push(String(series.name));
-      if (typeof options.selectField !== 'undefined') {
-        if (options.selectField.value === series.name) {
-          colors.push(String(options.bgColor));
-        } else {
-          colors.push('');
-        }
-      }
       if (!timeField) {
         continue;
       }
-
       for (const field of series.fields) {
         if (field.type !== FieldType.number) {
           continue;
@@ -130,6 +143,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
       traces.push({
         x: [names[i]],
         y: [bin_num[i]],
+        name: names[i],
         type: 'bar',
         marker: {
           color: colors[i],
