@@ -57,7 +57,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   }
   for (const series of data.series) {
     let zeros = bin_num.map(() => 0);
-    console.log(zeros);
     const { timeField } = getTimeField(series);
     let splits = String(series.name).split(' ');
     let split_names = String(series.name).split(' ').length; //length of series name
@@ -88,8 +87,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         }
         let copy = counts[name];
         for (let i = 0; i < bin_num.length; i++) {
-          console.log(Number(splits[0]));
-          console.log(bin_num[i]);
           if (Number(splits[0]) === bin_num[i]) {
             copy[i] = quantity;
             counts[name] = copy;
@@ -116,10 +113,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
     }
   }
   if (String(data.series[0].name).split(' ').length !== 1) {
-    console.log(colors);
-    console.log(bin_num);
-    console.log(names);
-    console.log(counts);
     for (let i = 0; i < names.length; i++) {
       traces.push({
         x: bin_num,
@@ -137,9 +130,6 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
       barmode: 'stack',
     };
   } else {
-    console.log(names);
-    console.log(bin_num);
-    console.log(colors);
     for (let i = 0; i < names.length; i++) {
       traces.push({
         x: [names[i]],
