@@ -1,46 +1,202 @@
 import React from 'react';
-import { PanelOptionsEditorBuilder, GrafanaTheme } from '@grafana/data';
-import { ColorPicker, Input, Icon, Button, stylesFactory, Select } from '@grafana/ui';
+import { PanelOptionsEditorBuilder } from '@grafana/data';
+import { ColorPicker, Input, Icon, Button, Select } from '@grafana/ui';
 import { config } from '@grafana/runtime';
-import { css } from 'emotion';
 import { PlotlyOptions } from './types';
 import { generateOptions } from './PlotlyPanel';
+import { getStyles } from './config';
 
 export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>) => {
   builder
-    .addTextInput({
-      path: 'YaxisLabel',
-      name: 'Y-Axis Label',
-      description: 'Title of the Y-Axis.',
+    .addBooleanSwitch({
+      path: 'showToolTip',
+      name: 'Show Tooltip on Hover',
+      description: 'Displays the tooltip when hovering.',
+      defaultValue: true,
     })
-    .addTextInput({
-      path: 'XaxisLabel',
-      name: 'X-Axis Label',
-      description: 'Title of the X-Axis.',
+    .addSelect({
+      path: 'tooltipOrder',
+      name: 'Tooltip labels order',
+      settings: {
+        options: [
+          { value: 'None', label: 'None' },
+          { value: 'Asc', label: 'Asc' },
+          { value: 'Desc', label: 'Desc' },
+        ],
+      },
+      defaultValue: 'None',
     })
     .addBooleanSwitch({
-      path: 'showLegend',
-      name: 'Show Legend',
-      description: 'Displays the legend.',
-      defaultValue: false,
+      path: 'showZeros',
+      name: 'Display zero values',
+      description: 'Displays zero values.',
+      defaultValue: true,
+    });
+  addYAxisEditor(builder);
+  addXAxisEditor(builder);
+  addSeriesOverride(builder);
+  addLegendEditor(builder);
+};
+
+function addYAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
+  const category = ['Y-Axis'];
+  builder
+    .addBooleanSwitch({
+      category,
+      path: 'showY',
+      name: 'Show',
+      defaultValue: true,
+    })
+    .addUnitPicker({
+      category,
+      path: 'unitY',
+      name: 'Unit',
+      defaultValue: 'short',
+    })
+    /*.addSelect({
+      category,
+      path: 'scaleY',
+      name: 'Scale',
+      settings: {
+        options: [
+          { value: 'linear', label: 'Linear' },
+          { value: 'log', label: 'Logarithmic' },
+        ],
+      },
+      defaultValue: 'linear',
+    })*/
+    .addNumberInput({
+      category,
+      path: 'maxY',
+      name: 'Max',
     })
     .addNumberInput({
-      path: 'labelAngle',
-      name: 'X-Axis Label Angle',
-      description: 'Show the labels of the X-Axis with the given angle.',
+      category,
+      path: 'minY',
+      name: 'Min',
       defaultValue: 0,
     })
     .addNumberInput({
-      path: 'margin',
-      name: 'X-Axis Label margin',
-      description: 'Adds a margin to the X-Axis labels if the names are too long.',
-      defaultValue: 40,
+      category,
+      path: 'decimalsY',
+      name: 'Decimals',
+    })
+    .addTextInput({
+      category,
+      path: 'YaxisLabel',
+      name: 'Label',
     });
-  addEditor(builder);
-};
+}
 
-function addEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
-  const category = ['Series Editor'];
+function addXAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
+  const category = ['X-Axis'];
+  builder
+    .addBooleanSwitch({
+      category,
+      path: 'showX',
+      name: 'Show',
+      defaultValue: true,
+    })
+    .addRadio({
+      category,
+      path: 'typeX',
+      defaultValue: 'number',
+      name: 'Type',
+      settings: {
+        options: [
+          {
+            value: 'category',
+            label: 'Category',
+          },
+          {
+            value: 'number',
+            label: 'Number',
+          },
+        ],
+      },
+    })
+    .addUnitPicker({
+      category,
+      path: 'unitX',
+      name: 'Unit',
+      defaultValue: 'short',
+    })
+    /*.addSelect({
+      category,
+      path: 'scaleX',
+      name: 'Scale',
+      settings: {
+        options: [
+          { value: 'linear', label: 'Linear' },
+          { value: 'log', label: 'Logarithmic' },
+        ],
+      },
+      defaultValue: 'linear',
+      showIf: s => (s.typeX === 'num' ? true : false),
+    })*/
+    .addNumberInput({
+      category,
+      path: 'maxX',
+      name: 'Max',
+      showIf: s => (s.typeX === 'number' ? true : false),
+    })
+    .addNumberInput({
+      category,
+      path: 'minX',
+      name: 'Min',
+      defaultValue: 0,
+      showIf: s => (s.typeX === 'number' ? true : false),
+    })
+    .addNumberInput({
+      category,
+      path: 'decimalsX',
+      name: 'Decimals',
+      showIf: s => (s.typeX === 'number' ? true : false),
+    })
+    .addTextInput({
+      category,
+      path: 'XaxisLabel',
+      name: 'Label',
+    });
+}
+
+function addLegendEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
+  const category = ['Legend'];
+  builder
+    .addBooleanSwitch({
+      category,
+      path: 'showLegend',
+      name: 'Show',
+      defaultValue: false,
+    })
+    .addRadio({
+      category,
+      path: 'positionLegend',
+      defaultValue: 'h',
+      name: 'Position',
+      settings: {
+        options: [
+          {
+            value: 'h',
+            label: 'Horizontal',
+          },
+          {
+            value: 'v',
+            label: 'Vertical',
+          },
+        ],
+      },
+    })
+    .addBooleanSwitch({
+      category,
+      path: 'showZeroLegend',
+      name: 'Show zeros',
+      defaultValue: false,
+    });
+}
+
+function addSeriesOverride(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
+  const category = ['Series Override'];
   builder
     .addCustomEditor({
       category,
@@ -118,22 +274,3 @@ function addEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
       defaultValue: 0,
     });
 }
-
-const getStyles = stylesFactory((theme: GrafanaTheme) => {
-  return {
-    colorPicker: css`
-      padding: 0 ${theme.spacing.sm};
-    `,
-    inputPrefix: css`
-      display: flex;
-      align-items: center;
-    `,
-    trashIcon: css`
-      color: ${theme.colors.textWeak};
-      cursor: pointer;
-      &:hover {
-        color: ${theme.colors.text};
-      }
-    `,
-  };
-});
