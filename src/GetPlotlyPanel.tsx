@@ -6,7 +6,7 @@ import { unitValues } from './config';
 export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
   let names: string[] = []; // Stores field names.
   let bin_num: any[] = []; // Stores bining id.
-  let counts: { [id: string]: number[] } = {}; // Stores a dictionary with the field and y value.
+  let counts: { [id: string]: any[] } = {}; // Stores a dictionary with the field and y value.
   // Iterate over every serie in the dataframe.
   for (const series of data.series) {
     const { timeField } = getTimeField(series);
@@ -15,17 +15,11 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
       console.log('Binning histogram.');
       // bins
       let splits = String(series.name).split(' ');
-      if (options.typeX === 'num') {
-        if (!bin_num.includes(Number(splits[0]))) {
-          bin_num.push(Number(splits[0]));
-        }
-      } else {
-        if (!bin_num.includes(String(splits[0]))) {
-          bin_num.push(String(splits[0]));
-        }
+      if (!bin_num.includes(Number(splits[0]))) {
+        bin_num.push(Number(splits[0]));
       }
       console.log(bin_num);
-      let zeros = bin_num.map(() => 0); // TODO: Change to null or another value.
+      let zeros = bin_num.map(() => null); // TODO: Change to null or another value.
       if (!timeField) {
         continue;
       }
