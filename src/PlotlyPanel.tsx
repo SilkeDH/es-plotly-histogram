@@ -26,6 +26,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   console.log(processedData);
   let properties = applyOptions(options, processedData);
   console.log(properties);
+  console.log(Object.keys(processedData.counts).length);
   let binning = Object.keys(processedData.counts).length === 0 ? true : false;
   let traces = generateTraces(processedData, options, properties, binning);
   console.log(traces);
