@@ -153,7 +153,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
   switch (getUnitYString) {
     case 'none': {
       suffixY += '';
-      tickformatY = 'none';
+      tickformatY = '.' + String(options.decimalsY) + 'f';
       break;
     }
     case 'short': {
@@ -162,7 +162,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     }
     default: {
       suffixY += unitValues[options.unitY];
-      tickformatX = '.' + String(options.decimalsY) + 'f';
+      tickformatY = '.' + String(options.decimalsY) + 'f';
       break;
     }
   }
@@ -196,7 +196,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     showlegend: options.showLegend,
     legend: {
       orientation: options.positionLegend,
-      y: -0.4,
+      y: options.positionLegend === 'h' ? options.legendMargin : 1,
     },
     yaxis: {
       title: options.YaxisLabel,
@@ -206,7 +206,6 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       automargin: true,
       tickformat: tickformatY,
       showline: true,
-      linecolor: '#969696',
     },
     xaxis: {
       title: options.XaxisLabel,
@@ -217,7 +216,6 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       type: options.typeX,
       tickformat: tickformatX,
       showline: true,
-      linecolor: '#969696',
     },
   };
 }

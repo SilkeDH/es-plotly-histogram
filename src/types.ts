@@ -58,6 +58,7 @@ export interface PlotlyOptions {
   YaxisLabel: string;
   XaxisLabel: string;
   positionLegend: string;
+  legendMargin: number;
 }
 
 export interface UnitOptions {

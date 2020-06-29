@@ -188,6 +188,13 @@ function addLegendEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
           },
         ],
       },
+    })
+    .addNumberInput({
+      category,
+      path: 'legendMargin',
+      name: 'Margin',
+      defaultValue: 0,
+      showIf: s => (s.positionLegend === 'h' ? true : false),
     });
 }
 
