@@ -80,6 +80,7 @@ function addYAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
       category,
       path: 'decimalsY',
       name: 'Decimals',
+      defaultValue: 0,
     })
     .addTextInput({
       category,
@@ -151,6 +152,7 @@ function addXAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
       category,
       path: 'decimalsX',
       name: 'Decimals',
+      defaultValue: 0,
       showIf: s => (s.typeX === 'number' ? true : false),
     })
     .addTextInput({
@@ -186,12 +188,6 @@ function addLegendEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
           },
         ],
       },
-    })
-    .addBooleanSwitch({
-      category,
-      path: 'showZeroLegend',
-      name: 'Show zeros',
-      defaultValue: false,
     });
 }
 

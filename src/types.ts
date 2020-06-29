@@ -49,6 +49,8 @@ export interface PlotlyOptions {
   minY: number;
   maxX: number;
   minX: number;
+  decimalsY: number;
+  decimalsX: number;
   btseries: number;
   showLegend: boolean;
   selectField: undefined | { value: string; label: string };

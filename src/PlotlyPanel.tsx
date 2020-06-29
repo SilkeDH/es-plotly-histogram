@@ -38,7 +38,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
       r: 40,
       l: 45,
       t: 40,
-      b: 40,
+      b: 45,
     },
     plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
     paper_bgcolor: 'rgba(0,0,0,0)', // Transparent

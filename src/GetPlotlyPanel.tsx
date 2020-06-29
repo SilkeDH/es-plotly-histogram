@@ -162,6 +162,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     }
     default: {
       suffixY += unitValues[options.unitY];
+      tickformatX = '.' + String(options.decimalsY) + 'f';
       break;
     }
   }
@@ -178,6 +179,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     }
     default: {
       suffixX += unitValues[options.unitX];
+      tickformatX = '.' + String(options.decimalsX) + 'f';
       break;
     }
   }
@@ -192,7 +194,10 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     height: height,
     barmode: barmode,
     showlegend: options.showLegend,
-    legend: { orientation: options.positionLegend },
+    legend: {
+      orientation: options.positionLegend,
+      y: -0.4,
+    },
     yaxis: {
       title: options.YaxisLabel,
       visible: options.showY,
@@ -200,6 +205,8 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       ticksuffix: suffixY,
       automargin: true,
       tickformat: tickformatY,
+      showline: true,
+      linecolor: '#969696',
     },
     xaxis: {
       title: options.XaxisLabel,
@@ -209,6 +216,8 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       automargin: true,
       type: options.typeX,
       tickformat: tickformatX,
+      showline: true,
+      linecolor: '#969696',
     },
   };
 }
