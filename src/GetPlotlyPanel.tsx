@@ -50,6 +50,15 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
         let copy = counts[name];
         for (let i = 0; i < bin_num.length; i++) {
           if (Number(splits[0]) === bin_num[i]) {
+            if (options.showZeros) {
+              copy[i] = quantity;
+            } else {
+              if (quantity === 0) {
+                copy[i] = null;
+              } else {
+                copy[i] = quantity;
+              }
+            }
             copy[i] = quantity;
             counts[name] = copy;
           }
@@ -68,9 +77,17 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
         if (field.type !== FieldType.number) {
           continue;
         }
-        let yaxis: number[] = [];
+        let yaxis: any[] = [];
         for (let i = 0; i < series.length; i++) {
-          yaxis.push(field.values.get(i));
+          if (options.showZeros) {
+            yaxis.push(field.values.get(i));
+          } else {
+            if (field.values.get(i) === 0) {
+              yaxis.push(null);
+            } else {
+              yaxis.push(field.values.get(i));
+            }
+          }
         }
         // sums values since query is based on time series (due ES DS bug).
         let quantity = yaxis.reduce(function(a, b) {
@@ -200,6 +217,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     },
     yaxis: {
       title: options.YaxisLabel,
+      showgrid: true,
       visible: options.showY,
       range: [options.minY, options.maxY],
       ticksuffix: suffixY,
@@ -208,6 +226,7 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       showline: true,
     },
     xaxis: {
+      showgrid: true,
       title: options.XaxisLabel,
       visible: options.showX,
       range: [options.minX, options.maxX],
