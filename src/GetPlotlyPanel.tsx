@@ -59,7 +59,6 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
                 copy[i] = quantity;
               }
             }
-            copy[i] = quantity;
             counts[name] = copy;
           }
         }
