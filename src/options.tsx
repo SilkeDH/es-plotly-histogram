@@ -193,7 +193,7 @@ function addLegendEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
       category,
       path: 'legendMargin',
       name: 'Margin',
-      defaultValue: 0,
+      defaultValue: -0.3,
       showIf: s => (s.positionLegend === 'h' ? true : false),
     });
 }

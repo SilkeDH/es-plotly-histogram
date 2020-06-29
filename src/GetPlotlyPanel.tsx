@@ -93,7 +93,15 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
         let quantity = yaxis.reduce(function(a, b) {
           return a + b;
         });
-        bin_num.push(quantity);
+        if (options.showZeros) {
+          bin_num.push(quantity);
+        } else {
+          if (quantity === 0) {
+            bin_num.push(null);
+          } else {
+            bin_num.push(quantity);
+          }
+        }
       }
       console.log(bin_num);
     }
@@ -223,7 +231,6 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       ticksuffix: suffixY,
       automargin: true,
       tickformat: tickformatY,
-      showline: true,
     },
     xaxis: {
       showgrid: true,
@@ -234,7 +241,6 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       automargin: true,
       type: options.typeX,
       tickformat: tickformatX,
-      showline: true,
     },
   };
 }
