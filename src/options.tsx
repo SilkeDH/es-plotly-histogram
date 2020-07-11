@@ -1,9 +1,9 @@
 import React from 'react';
 import { PanelOptionsEditorBuilder } from '@grafana/data';
-import { ColorPicker, Input, Icon, Button, Select, Label, Checkbox, IconButton } from '@grafana/ui';
+import { ColorPicker, Input, Icon, Button, Label, Checkbox, IconButton } from '@grafana/ui';
 import { config } from '@grafana/runtime';
 import { PlotlyOptions } from './types';
-import { generateOptions } from './PlotlyPanel';
+//import { generateOptions } from './PlotlyPanel';
 import { getStyles } from './config';
 
 export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>) => {
@@ -260,7 +260,7 @@ function addColorEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
     editor: props => {
       const [list, setList] = React.useState(props.value);
       const styles = getStyles(config.theme);
-      const changeName = (id: string, label: string | undefined) => {
+      /*const changeName = (id: string, label: string | undefined) => {
         let ye = list.map((item: SiSe) => {
           if (item.id === id) {
             return { ...item, name: label };
@@ -270,7 +270,7 @@ function addColorEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
         });
         setList(ye);
         props.onChange(ye);
-      };
+      };*/
       const changeColor = (id: string, color: string | undefined) => {
         let ye = list.map((item: SiSe) => {
           if (item.id === id) {
@@ -340,16 +340,7 @@ function addColorEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
                 <div>
                   <p>
                     <Label>Field</Label>
-                    <div className={styles.inputPrefix}>
-                      <Select
-                        options={generateOptions()}
-                        value={item.name}
-                        onChange={v => {
-                          changeName(item.id, v.value);
-                        }}
-                      />
-                      <IconButton name="times" size="xl" surface="panel" onClick={() => deleteSeries(item.id)} />
-                    </div>
+                    <IconButton name="times" size="xl" surface="panel" onClick={() => deleteSeries(item.id)} />
                   </p>
                   <Label>Color</Label>
                   <p>
