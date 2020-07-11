@@ -1,10 +1,10 @@
 import React from 'react';
 import { PanelOptionsEditorBuilder } from '@grafana/data';
-import { Label } from '@grafana/ui';
-//import { config } from '@grafana/runtime';
+import { ColorPicker, Input, Icon, Button, Select, Label, Checkbox, IconButton } from '@grafana/ui';
+import { config } from '@grafana/runtime';
 import { PlotlyOptions } from './types';
-//import { generateOptions } from './PlotlyPanel';
-//import { getStyles } from './config';
+import { generateOptions } from './PlotlyPanel';
+import { getStyles } from './config';
 
 export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>) => {
   builder
@@ -50,7 +50,7 @@ export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>
     });
 
   addAxesEditor(builder);
-  //addColorEditor(builder);
+  addColorEditor(builder);
 };
 
 function addAxesEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
@@ -238,7 +238,7 @@ function addAxesEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
     });
 }
 
-/*interface SiSe {
+interface SiSe {
   id: string;
   name: string;
   color: string;
@@ -409,4 +409,4 @@ function addColorEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
     },
     defaultValue: [],
   });
-}*/
+}
