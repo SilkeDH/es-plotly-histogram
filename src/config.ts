@@ -39,159 +39,59 @@ export const unitValues = {
   conngNm3: 'ng/Mm³',
   conμgm3: 'μg/m³',
   conμgNm3: 'μg/Nm³',
+  Time: 'Time',
+  hertz: '1/s',
+  ns: 'ns',
+  µs: 'µs',
+  ms: 'ms',
+  s: 's',
+  m: 'm',
+  bits: 'b',
+  bytes: 'B',
+  kbytes: 'KiB',
+  mbytes: 'MiB',
+  gbytes: 'GiB',
+  tbytes: 'TiB',
+  pbytes: 'PiB',
+  decbits: 'b',
+  decbytes: 'B',
+  deckbytes: 'kB',
+  decmbytes: 'MB',
+  decgbytes: 'GB',
+  dectbytes: 'TB',
+  decpbytes: 'PB',
+  pps: 'pps',
+  bps: 'bps',
+  Bps: 'Bps',
+  KBs: 'kBs',
+  Kbits: 'kbps',
+  MBs: 'MBs',
+  Mbits: 'Mbps',
+  GBs: 'GBs',
+  Gbits: 'Gbps',
+  TBs: 'TBs',
+  Tbits: 'Tbps',
+  PBs: 'PBs',
+  Pbits: 'Pbps',
+  Hs: 'H/s',
+  KHs: 'kH/s',
+  MHs: 'MH/s',
+  GHs: 'GH/s',
+  THs: 'TH/s',
+  PHs: 'PH/s',
+  EHS: 'EH/s',
+  Throughput: 'Throughput',
+  cps: 'cps',
+  ops: 'ops',
+  reqps: 'reqps',
+  rps: 'rps',
+  wps: 'wps',
+  iops: 'iops',
+  cpm: 'cpm',
+  opm: 'opm',
+  rpm: 'rpm',
+  wpm: 'wpm',
 };
-
-// Not used. Instead unitPicker.
-export const options = [
-  {
-    label: 'Misc',
-    value: 'Misc',
-    items: [
-      {
-        label: 'none',
-        value: 'none',
-      },
-      {
-        label: 'short',
-        value: 'short',
-      },
-      {
-        label: 'percent(0-100)',
-        value: '%',
-      },
-      {
-        label: 'Humidity (%H)',
-        value: '%H',
-      },
-      {
-        label: 'decibel',
-        value: 'db',
-      },
-    ],
-  },
-  {
-    label: 'Acceleration',
-    value: 'Acceleration',
-    items: [
-      {
-        label: 'Meters/sec²',
-        value: 'm/sec²',
-      },
-      {
-        label: 'Feet/sec²',
-        value: 'f/sec²',
-      },
-      {
-        label: 'G unit',
-        value: 'g',
-      },
-    ],
-  },
-  {
-    label: 'Angle',
-    value: 'Angle',
-    items: [
-      {
-        label: 'Degrees(°)',
-        value: '°',
-      },
-      {
-        label: 'Radians',
-        value: 'rad',
-      },
-      {
-        label: 'Gradian',
-        value: 'grad',
-      },
-      {
-        label: 'Arc Minutes',
-        value: 'arcmin',
-      },
-      {
-        label: 'Arc Seconds',
-        value: 'arcsec',
-      },
-    ],
-  },
-  {
-    label: 'Area',
-    value: 'Area',
-    items: [
-      {
-        label: 'Square Meters (m²)',
-        value: 'm²',
-      },
-      {
-        label: 'Square Feet (ft²)',
-        value: 'ft²',
-      },
-      {
-        label: 'Square miles (mi²)',
-        value: 'mi²',
-      },
-    ],
-  },
-  {
-    label: 'Computation',
-    value: 'Computation',
-    items: [
-      {
-        label: 'FLOP/s',
-        value: 'FLOP/s',
-      },
-      {
-        label: 'MFLOP/s',
-        value: 'FLOP/s',
-      },
-      {
-        label: 'GFLOP/s',
-        value: 'GFLOP/s',
-      },
-      {
-        label: 'TFLOP/s',
-        value: 'TFLOP/s',
-      },
-      {
-        label: 'PFLOP/s',
-        value: 'PFLOP/s',
-      },
-      {
-        label: 'EFLOP/s',
-        value: 'EFLOP/s',
-      },
-    ],
-  },
-  {
-    label: 'Concentration',
-    value: 'Concentration',
-    items: [
-      {
-        label: 'parts-per-million (ppm)',
-        value: 'ppm',
-      },
-      {
-        label: 'parts-per-billion (ppb)',
-        value: 'ppb',
-      },
-      {
-        label: 'nanogram per cubic meter (ng/m³)',
-        value: 'ng/m³',
-      },
-      {
-        label: 'nanogram per normal cubic meter (ng/Nm³)',
-        value: 'ng/Nm³',
-      },
-      {
-        label: 'microgram per cubic meter (μg/m³)',
-        value: 'μg/m³',
-      },
-      {
-        label: 'microgram per normal cubic meter (μg/Nm³)',
-        value: 'μg/Nm³',
-      },
-    ],
-  },
-];
 
 export const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {

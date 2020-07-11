@@ -23,14 +23,14 @@ var newNames = new SetGetNames();
 export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) => {
   const theme = useTheme();
   let processedData = getSeriesNameValue(data, options);
-  console.log(processedData);
+  //console.log(processedData);
   let properties = applyOptions(options, processedData);
-  console.log(properties);
+  //console.log(properties);
   let binning = Object.keys(processedData.counts).length === 0 ? false : true;
   let traces = generateTraces(processedData, options, properties, binning);
-  console.log(traces);
+  //console.log(traces);
   let layout_mode = generateLayout(options, binning, width, height);
-  console.log(layout_mode);
+  //console.log(layout_mode);
   const defaultLayout = (theme: GrafanaTheme) => ({
     width: width,
     height: height,

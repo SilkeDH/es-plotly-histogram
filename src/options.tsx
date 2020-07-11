@@ -1,6 +1,6 @@
 import React from 'react';
 import { PanelOptionsEditorBuilder } from '@grafana/data';
-import { ColorPicker, Input, Icon, Button, Select } from '@grafana/ui';
+import { ColorPicker, Input, Icon, Button, Select, Label, Checkbox, IconButton } from '@grafana/ui';
 import { config } from '@grafana/runtime';
 import { PlotlyOptions } from './types';
 import { generateOptions } from './PlotlyPanel';
@@ -14,84 +14,61 @@ export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>
       description: 'Displays the tooltip when hovering.',
       defaultValue: true,
     })
-    .addSelect({
-      path: 'tooltipOrder',
-      name: 'Tooltip labels order',
-      settings: {
-        options: [
-          { value: 'None', label: 'None' },
-          { value: 'Asc', label: 'Asc' },
-          { value: 'Desc', label: 'Desc' },
-        ],
-      },
-      defaultValue: 'None',
-    })
     .addBooleanSwitch({
       path: 'showZeros',
       name: 'Display zero values',
       description: 'Displays zero values.',
       defaultValue: true,
-    });
-  addYAxisEditor(builder);
-  addXAxisEditor(builder);
-  addSeriesOverride(builder);
-  addLegendEditor(builder);
-};
-
-function addYAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
-  const category = ['Y-Axis'];
-  builder
+    })
     .addBooleanSwitch({
-      category,
-      path: 'showY',
-      name: 'Show',
-      defaultValue: true,
+      path: 'showLegend',
+      name: 'Show Legend',
+      defaultValue: false,
     })
-    .addUnitPicker({
-      category,
-      path: 'unitY',
-      name: 'Unit',
-      defaultValue: 'short',
-    })
-    /*.addSelect({
-      category,
-      path: 'scaleY',
-      name: 'Scale',
+    .addRadio({
+      path: 'positionLegend',
+      defaultValue: 'v',
+      name: 'Legend Position',
       settings: {
         options: [
-          { value: 'linear', label: 'Linear' },
-          { value: 'log', label: 'Logarithmic' },
+          {
+            value: 'h',
+            label: 'Horizontal',
+          },
+          {
+            value: 'v',
+            label: 'Vertical',
+          },
         ],
       },
-      defaultValue: 'linear',
-    })*/
-    .addNumberInput({
-      category,
-      path: 'maxY',
-      name: 'Max',
     })
     .addNumberInput({
-      category,
-      path: 'minY',
-      name: 'Min',
-      defaultValue: 0,
-    })
-    .addNumberInput({
-      category,
-      path: 'decimalsY',
-      name: 'Decimals',
-      defaultValue: 0,
-    })
-    .addTextInput({
-      category,
-      path: 'YaxisLabel',
-      name: 'Label',
+      path: 'legendMargin',
+      name: 'Margin',
+      defaultValue: -0.3,
+      showIf: s => (s.positionLegend === 'h' ? true : false),
     });
-}
 
-function addXAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
-  const category = ['X-Axis'];
+  addAxesEditor(builder);
+  addColorEditor(builder);
+};
+
+function addAxesEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
+  const category = ['Axes'];
   builder
+    .addCustomEditor({
+      category,
+      id: 'axisXLabel',
+      path: 'axisXlabel',
+      name: '',
+      editor: props => {
+        return (
+          <div>
+            <Label style={{ fontSize: '14px' }}>X Axis</Label>
+          </div>
+        );
+      },
+    })
     .addBooleanSwitch({
       category,
       path: 'showX',
@@ -101,7 +78,7 @@ function addXAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
     .addRadio({
       category,
       path: 'typeX',
-      defaultValue: 'number',
+      defaultValue: 'category',
       name: 'Type',
       settings: {
         options: [
@@ -122,19 +99,6 @@ function addXAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
       name: 'Unit',
       defaultValue: 'short',
     })
-    /*.addSelect({
-      category,
-      path: 'scaleX',
-      name: 'Scale',
-      settings: {
-        options: [
-          { value: 'linear', label: 'Linear' },
-          { value: 'log', label: 'Logarithmic' },
-        ],
-      },
-      defaultValue: 'linear',
-      showIf: s => (s.typeX === 'num' ? true : false),
-    })*/
     .addNumberInput({
       category,
       path: 'maxX',
@@ -152,128 +116,297 @@ function addXAxisEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
       category,
       path: 'decimalsX',
       name: 'Decimals',
-      defaultValue: 0,
+      defaultValue: 1,
       showIf: s => (s.typeX === 'number' ? true : false),
     })
     .addTextInput({
       category,
       path: 'XaxisLabel',
       name: 'Label',
-    });
-}
-
-function addLegendEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
-  const category = ['Legend'];
-  builder
-    .addBooleanSwitch({
-      category,
-      path: 'showLegend',
-      name: 'Show',
-      defaultValue: false,
-    })
-    .addRadio({
-      category,
-      path: 'positionLegend',
-      defaultValue: 'h',
-      name: 'Position',
-      settings: {
-        options: [
-          {
-            value: 'h',
-            label: 'Horizontal',
-          },
-          {
-            value: 'v',
-            label: 'Vertical',
-          },
-        ],
-      },
-    })
-    .addNumberInput({
-      category,
-      path: 'legendMargin',
-      name: 'Margin',
-      defaultValue: -0.3,
-      showIf: s => (s.positionLegend === 'h' ? true : false),
-    });
-}
-
-function addSeriesOverride(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
-  const category = ['Series Override'];
-  builder
-    .addCustomEditor({
-      category,
-      id: 'selectField',
-      path: 'selectField',
-      name: 'Select field',
-      editor: props => {
-        const styles = getStyles(config.theme);
-        return (
-          <div>
-            <Select
-              options={generateOptions()}
-              value={props.value}
-              onChange={v => {
-                props.onChange(v);
-              }}
-              prefix={<Icon className={styles.trashIcon} name="sync" onClick={() => props.onChange(undefined)} />}
-            />
-          </div>
-        );
-      },
-      defaultValue: '',
     })
     .addCustomEditor({
       category,
-      id: 'bgColor',
-      path: 'bgColor',
-      name: 'Background Color',
-      editor: props => {
-        const styles = getStyles(config.theme);
-        let prefix: React.ReactNode = null;
-        let suffix: React.ReactNode = null;
-        if (props.value) {
-          suffix = <Icon className={styles.trashIcon} name="trash-alt" onClick={() => props.onChange(undefined)} />;
-        }
-        prefix = (
-          <div className={styles.inputPrefix}>
-            <div className={styles.colorPicker}>
-              <ColorPicker
-                color={props.value || config.theme.colors.panelBg}
-                onChange={props.onChange}
-                enableNamedColors={true}
-              />
-            </div>
-          </div>
-        );
-        return (
-          <div>
-            <Input
-              type="text"
-              value={props.value || 'Pick Color'}
-              onBlur={(v: any) => {}}
-              prefix={prefix}
-              suffix={suffix}
-            />
-          </div>
-        );
-      },
-      defaultValue: '',
-    })
-    .addCustomEditor({
-      category,
-      id: 'btseries',
-      path: 'btseries',
+      id: 'axisYLabel',
+      path: 'axisYlabel',
       name: '',
       editor: props => {
         return (
           <div>
-            <Button variant="secondary" icon="plus" onClick={() => props.onChange(props.value + 1)}>
-              New
-            </Button>
+            <Label style={{ fontSize: '14px' }}>Right Y Axis</Label>
           </div>
         );
       },
+    })
+    .addBooleanSwitch({
+      category,
+      path: 'showY',
+      name: 'Show',
+      defaultValue: true,
+    })
+    .addUnitPicker({
+      category,
+      path: 'unitY',
+      name: 'Unit',
+      defaultValue: 'short',
+    })
+    .addSelect({
+      category,
+      path: 'scaleY',
+      name: 'Scale',
+      settings: {
+        options: [
+          { value: 'linear', label: 'Linear' },
+          { value: 'log', label: 'Logarithmic' },
+        ],
+      },
+      defaultValue: 'linear',
+    })
+    .addNumberInput({
+      category,
+      path: 'maxY',
+      name: 'Max',
+    })
+    .addNumberInput({
+      category,
+      path: 'minY',
+      name: 'Min',
       defaultValue: 0,
+    })
+    .addNumberInput({
+      category,
+      path: 'decimalsY',
+      name: 'Decimals',
+      defaultValue: 1,
+    })
+    .addTextInput({
+      category,
+      path: 'YaxisLabel',
+      name: 'Label',
+    })
+    .addCustomEditor({
+      category,
+      id: 'axisY2Label',
+      path: 'axisY2label',
+      name: '',
+      editor: props => {
+        return (
+          <div>
+            <Label style={{ fontSize: '14px' }}> Left Y Axis</Label>
+          </div>
+        );
+      },
+    })
+    .addUnitPicker({
+      category,
+      path: 'unitY2',
+      name: 'Unit',
+      defaultValue: 'short',
+    })
+    .addSelect({
+      category,
+      path: 'scaleY2',
+      name: 'Scale',
+      settings: {
+        options: [
+          { value: 'linear', label: 'Linear' },
+          { value: 'log', label: 'Logarithmic' },
+        ],
+      },
+      defaultValue: 'linear',
+    })
+    .addNumberInput({
+      category,
+      path: 'maxY2',
+      name: 'Max',
+    })
+    .addNumberInput({
+      category,
+      path: 'minY2',
+      name: 'Min',
+      defaultValue: 0,
+    })
+    .addNumberInput({
+      category,
+      path: 'decimalsY2',
+      name: 'Decimals',
+      defaultValue: 1,
+    })
+    .addTextInput({
+      category,
+      path: 'YaxisLabel2',
+      name: 'Label',
     });
+}
+
+interface SiSe {
+  id: string;
+  name: string;
+  color: string;
+  negative: boolean;
+  y2: boolean;
+}
+[];
+
+const initialList = { id: '0', name: undefined, color: '', negative: false, y2: false };
+
+function addColorEditor(builder: PanelOptionsEditorBuilder<PlotlyOptions>) {
+  const category = ['Series Overrides'];
+  builder.addCustomEditor({
+    category,
+    id: 'selectField',
+    path: 'selectField',
+    name: 'Select field',
+    description: 'Sets individual properties for the selected field.',
+    editor: props => {
+      const [list, setList] = React.useState(props.value);
+      const styles = getStyles(config.theme);
+      const changeName = (id: string, label: string | undefined) => {
+        let ye = list.map((item: SiSe) => {
+          if (item.id === id) {
+            return { ...item, name: label };
+          } else {
+            return item;
+          }
+        });
+        setList(ye);
+        props.onChange(ye);
+      };
+      const changeColor = (id: string, color: string | undefined) => {
+        let ye = list.map((item: SiSe) => {
+          if (item.id === id) {
+            return { ...item, color: color };
+          } else {
+            return item;
+          }
+        });
+        setList(ye);
+        props.onChange(ye);
+      };
+      const changeNegative = (id: string) => {
+        let ye = list.map((item: SiSe) => {
+          if (item.id === id) {
+            return { ...item, negative: !item.negative };
+          } else {
+            return item;
+          }
+        });
+        setList(ye);
+        props.onChange(ye);
+      };
+      const changeSecondY = (id: string) => {
+        let ye = list.map((item: SiSe) => {
+          if (item.id === id) {
+            return { ...item, y2: !item.y2 };
+          } else {
+            return item;
+          }
+        });
+        setList(ye);
+        props.onChange(ye);
+      };
+      const addSeries = () => {
+        let newList = {};
+        if (list.length === 0) {
+          newList = initialList;
+        } else {
+          newList = {
+            id: String(Number(list[list.length - 1].id) + 1),
+            name: '',
+            color: '',
+            negative: false,
+            y2: false,
+          };
+        }
+        let ye = [...list, newList];
+        setList(ye);
+        props.onChange(ye);
+      };
+      const deleteSeries = (id: string) => {
+        var index = list
+          .map(function(o: any) {
+            return o.id;
+          })
+          .indexOf(id);
+        list.splice(index, 1);
+        setList(list);
+        props.onChange(list);
+      };
+      return (
+        <div>
+          {list.map((item: SiSe) => {
+            return (
+              <div>
+                <br></br>
+                <div>
+                  <p>
+                    <Label>Field</Label>
+                    <div className={styles.inputPrefix}>
+                      <Select
+                        options={generateOptions()}
+                        value={item.name}
+                        onChange={v => {
+                          changeName(item.id, v.value);
+                        }}
+                      />
+                      <IconButton name="times" size="xl" surface="panel" onClick={() => deleteSeries(item.id)} />
+                    </div>
+                  </p>
+                  <Label>Color</Label>
+                  <p>
+                    <Input
+                      id="1"
+                      type="text"
+                      value={item.color || 'Pick Color'}
+                      onBlur={(v: any) => {}}
+                      prefix={
+                        <div className={styles.inputPrefix}>
+                          <div className={styles.colorPicker}>
+                            <ColorPicker
+                              color={item.color || config.theme.colors.panelBg}
+                              onChange={v => {
+                                changeColor(item.id, v);
+                              }}
+                              enableNamedColors={true}
+                            />
+                          </div>
+                        </div>
+                      }
+                      suffix={
+                        <Icon className={styles.trashIcon} name="trash-alt" onClick={() => changeColor(item.id, '')} />
+                      }
+                    />
+                  </p>
+                  <div>
+                    <p>
+                      <Checkbox
+                        value={item.negative}
+                        onChange={() => {
+                          changeNegative(item.id);
+                        }}
+                        label="Negative Y-Axis"
+                      />
+                    </p>
+                    <p>
+                      <Checkbox
+                        value={item.y2}
+                        onChange={() => {
+                          changeSecondY(item.id);
+                        }}
+                        label="Second Y-Axis"
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          <br></br>
+          <Button variant="secondary" onClick={() => addSeries()}>
+            + Add Series Override
+          </Button>
+        </div>
+      );
+    },
+    defaultValue: [],
+  });
 }

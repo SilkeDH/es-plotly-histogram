@@ -12,13 +12,13 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
     const { timeField } = getTimeField(series);
     let split_names = String(series.name).split(' ').length; // Look if name has blank space to detect bins.
     if (split_names !== 1) {
-      console.log('Binning histogram.');
+      //console.log('Binning histogram.');
       // bins
       let splits = String(series.name).split(' ');
       if (!bin_num.includes(Number(splits[0]))) {
         bin_num.push(Number(splits[0]));
       }
-      console.log(bin_num);
+      //console.log(bin_num);
       let zeros = bin_num.map(() => null); // TODO: Change to null or another value.
       if (!timeField) {
         continue;
@@ -31,7 +31,7 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
       if (!names.includes(name)) {
         names.push(name);
       }
-      console.log(names);
+      //console.log(names);
       // y values
       for (const field of series.fields) {
         if (field.type !== FieldType.number) {
@@ -63,12 +63,12 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
           }
         }
       }
-      console.log(counts);
+      //console.log(counts);
     } else {
       // no bins
-      console.log('No binning histogram.');
+      //console.log('No binning histogram.');
       names.push(String(series.name));
-      console.log(names);
+      //console.log(names);
       if (!timeField) {
         continue;
       }
@@ -102,7 +102,7 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
           }
         }
       }
-      console.log(bin_num);
+      //console.log(bin_num);
     }
   }
   return { bins: bin_num, names: names, counts: counts };
@@ -112,54 +112,102 @@ export function applyOptions(
   options: PlotlyOptions,
   data: { bins: any[]; names: string[]; counts: { [id: string]: number[] } }
 ) {
-  // Defining color states.
-  // TODO create external interface for data.
+  let series_options = options.selectField;
+  let series_color: { [id: string]: string } = {};
+  let series_negation: { [id: string]: boolean } = {};
+  let series_y2: { [id: string]: boolean } = {};
   let colors: string[] = [];
+  let negation: boolean[] = [];
+  let y2: boolean[] = [];
   for (const name of data.names) {
-    if (typeof options.selectField !== 'undefined') {
-      if (options.selectField.value === name) {
-        colors.push(String(options.bgColor));
-      } else {
-        colors.push('');
-      }
+    series_color[name] = '';
+    series_negation[name] = false;
+    series_y2[name] = false;
+  }
+  if (series_options !== undefined) {
+    for (const override of series_options) {
+      series_color[override.name] = override.color;
+      series_negation[override.name] = override.negative;
+      series_y2[override.name] = override.y2;
     }
   }
-  return { colors: colors };
+  for (const name of data.names) {
+    colors.push(series_color[name]);
+    negation.push(series_negation[name]);
+    y2.push(series_y2[name]);
+  }
+  return { colors: colors, negation: negation, y2: y2 };
 }
 
 export function generateTraces(
   data: { bins: any[]; names: string[]; counts: { [id: string]: number[] } },
   options: PlotlyOptions,
-  props: { colors: string[] },
+  props: { colors: string[]; negation: boolean[]; y2: boolean[] },
   bin: boolean
 ) {
   let traces: any[] = [];
   if (Object.keys(data.counts).length === 0) {
     //no bins
     for (let i = 0; i < data.names.length; i++) {
-      traces.push({
-        x: [data.names[i]],
-        y: [data.bins[i]],
-        name: data.names[i],
-        type: 'bar',
-        marker: {
-          color: props.colors[i],
-        },
-        hoverinfo: options.showToolTip ? 'all' : 'none',
-      });
+      if (props.negation[i] === true) {
+        data.bins[i] = -1 * data.bins[i];
+      }
+      if (props.y2[i] === true) {
+        traces.push({
+          x: [data.names[i]],
+          y: [data.bins[i]],
+          name: data.names[i],
+          type: 'bar',
+          marker: {
+            color: props.colors[i],
+          },
+          yaxis: 'y2',
+          hoverinfo: options.showToolTip ? 'all' : 'none',
+        });
+      } else {
+        traces.push({
+          x: [data.names[i]],
+          y: [data.bins[i]],
+          name: data.names[i],
+          type: 'bar',
+          marker: {
+            color: props.colors[i],
+          },
+          hoverinfo: options.showToolTip ? 'all' : 'none',
+        });
+      }
     }
   } else {
     for (let i = 0; i < data.names.length; i++) {
-      traces.push({
-        x: data.bins,
-        y: data.counts[data.names[i]],
-        name: data.names[i],
-        type: 'bar',
-        marker: {
-          color: props.colors[i],
-        },
-        hoverinfo: options.showToolTip ? 'all' : 'none',
-      });
+      if (props.negation[i] === true) {
+        for (let j = 0; j < data.counts[data.names[i]].length; j++) {
+          data.counts[data.names[i]][j] = -1 * data.counts[data.names[i]][j];
+        }
+      }
+      if (props.y2[i] === true) {
+        traces.push({
+          x: data.bins,
+          y: data.counts[data.names[i]],
+          name: data.names[i],
+          type: 'bar',
+          marker: {
+            color: props.colors[i],
+          },
+          yaxis: 'y2',
+          hoverinfo: options.showToolTip ? 'all' : 'none',
+        });
+      } else {
+        traces.push({
+          x: data.bins,
+          y: data.counts[data.names[i]],
+          name: data.names[i],
+          type: 'bar',
+          marker: {
+            color: props.colors[i],
+          },
+          hoverinfo: options.showToolTip ? 'all' : 'none',
+        });
+      }
     }
   }
   return traces;
@@ -168,11 +216,14 @@ export function generateTraces(
 export function generateLayout(options: PlotlyOptions, bin: boolean, width: number, height: number) {
   const getKeyValue = <U extends keyof T, T extends object>(key: U) => (obj: T) => obj[key];
   const getUnitYString = getKeyValue<keyof UnitOptions, UnitOptions>(options.unitY)(unitValues);
+  const getUnitYString2 = getKeyValue<keyof UnitOptions, UnitOptions>(options.unitY2)(unitValues);
   const getUnitXString = getKeyValue<keyof UnitOptions, UnitOptions>(options.unitX)(unitValues);
   let suffixY = ' ';
   let suffixX = ' ';
+  let suffixY2 = ' ';
   let tickformatX = '';
   let tickformatY = '';
+  let tickformatY2 = '';
   // Unit for Y axis.
   switch (getUnitYString) {
     case 'none': {
@@ -182,11 +233,30 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     }
     case 'short': {
       suffixY += '';
+      tickformatY = '.' + String(options.decimalsY) + 's';
       break;
     }
     default: {
       suffixY += unitValues[options.unitY];
-      tickformatY = '.' + String(options.decimalsY) + 'f';
+      tickformatY = '.' + String(options.decimalsY) + 's';
+      break;
+    }
+  }
+  // Unit for Y2 axis.
+  switch (getUnitYString2) {
+    case 'none': {
+      suffixY2 += '';
+      tickformatY2 = '.' + String(options.decimalsY2) + 'f';
+      break;
+    }
+    case 'short': {
+      suffixY2 += '';
+      tickformatY2 = '.' + String(options.decimalsY2) + 's';
+      break;
+    }
+    default: {
+      suffixY2 += unitValues[options.unitY2];
+      tickformatY2 = '.' + String(options.decimalsY2) + 's';
       break;
     }
   }
@@ -199,11 +269,12 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
     }
     case 'short': {
       suffixX += '';
+      tickformatX = '.' + String(options.decimalsX) + 's';
       break;
     }
     default: {
       suffixX += unitValues[options.unitX];
-      tickformatX = '.' + String(options.decimalsX) + 'f';
+      tickformatX = '.' + String(options.decimalsX) + 's';
       break;
     }
   }
@@ -230,6 +301,18 @@ export function generateLayout(options: PlotlyOptions, bin: boolean, width: numb
       ticksuffix: suffixY,
       automargin: true,
       tickformat: tickformatY,
+      type: options.scaleY,
+    },
+    yaxis2: {
+      title: options.YaxisLabel2,
+      showgrid: true,
+      range: [options.minY2, options.maxY2],
+      ticksuffix: suffixY2,
+      automargin: true,
+      tickformat: tickformatY2,
+      type: options.scaleY2,
+      overlaying: 'y',
+      side: 'right',
     },
     xaxis: {
       showgrid: true,
