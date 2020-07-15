@@ -80,8 +80,8 @@ The plots were made with React Plotly.js which include a modebar in every plot t
 
 ## Issues 
 Sadly, this plugin comes with some issues that were not resolved yet.
-  - When using the Logarithmic scale, displaying the plot in the dashboard displays the plotted bars outside the X-Axis. This issue appears sometimes in "Edit" mode.
-  - When overriding a series, the functions *Negative Y-Axis* and *Second Y-Axis* only work well for non-stacked plots. The reason is that this plugins does not create separate bars when using this function in the X-Axis, so they override the other ones located there.
+  - When using the Logarithmic scale, displaying the plot in the dashboard displays the plotted bars outside the X-Axis. This issue also appears sometimes in "Edit" mode.
+  - When overriding a series, the functions *Negative Y-Axis* and *Second Y-Axis* only work well for non-stacked plots. The reason is that this plugin does not create separate bars when using this function in the X-Axis, so they override the other ones located there.
   
 ## Notes
 This plugin was developed when there was an issue regarding the Elastic Search plugin. The queries only worked if they were designed as date histogram. Therefore, when binning, this plugin sums through all values to get the total.
