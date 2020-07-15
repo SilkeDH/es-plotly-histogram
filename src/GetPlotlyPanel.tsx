@@ -11,7 +11,7 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
   for (const series of data.series) {
     const { timeField } = getTimeField(series);
     let split_names = String(series.name).split(' ').length; // Look if name has blank space to detect bins.
-    if (split_names !== 1) {
+    if (split_names !== 1 && options.stack) {
       //console.log('Binning histogram.');
       // bins
       let splits = String(series.name).split(' ');
@@ -19,7 +19,7 @@ export function getSeriesNameValue(data: PanelData, options: PlotlyOptions) {
         bin_num.push(Number(splits[0]));
       }
       //console.log(bin_num);
-      let zeros = bin_num.map(() => null); // TODO: Change to null or another value.
+      let zeros = bin_num.map(() => null);
       if (!timeField) {
         continue;
       }

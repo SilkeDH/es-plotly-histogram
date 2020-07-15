@@ -87,6 +87,7 @@ type unitTypes =
   | 'wpm';
 
 export interface PlotlyOptions {
+  stack: boolean;
   showToolTip: boolean;
   tooltipOrder: string;
   showZeros: boolean;

@@ -9,6 +9,12 @@ import { getStyles } from './config';
 export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>) => {
   builder
     .addBooleanSwitch({
+      path: 'stack',
+      name: 'Stacking',
+      description: 'Stacks or unstacks bars if possible.',
+      defaultValue: true,
+    })
+    .addBooleanSwitch({
       path: 'showToolTip',
       name: 'Show Tooltip on Hover',
       description: 'Displays the tooltip when hovering.',
