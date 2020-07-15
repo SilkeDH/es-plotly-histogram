@@ -49,7 +49,13 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
   newNames.bar = processedData.names;
   const plotlyData: Plotly.Data[] = traces;
   const plotlyLayout: Partial<Plotly.Layout> = defaults(layout_mode, defaultLayout(theme));
-  return <Plot data={plotlyData} layout={plotlyLayout} />;
+  return (
+    <Plot
+      data={plotlyData}
+      layout={plotlyLayout}
+      config={{ displaylogo: false, displayModeBar: options.plotlyModebar }}
+    />
+  );
 };
 
 export const generateOptions = (desc = false) => {

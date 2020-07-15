@@ -90,6 +90,7 @@ export interface PlotlyOptions {
   stack: boolean;
   showToolTip: boolean;
   tooltipOrder: string;
+  plotlyModebar: boolean;
   showZeros: boolean;
   showY: boolean;
   showY2: boolean;

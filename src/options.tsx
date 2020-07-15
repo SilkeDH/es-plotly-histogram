@@ -27,6 +27,12 @@ export const optionsBuilder = (builder: PanelOptionsEditorBuilder<PlotlyOptions>
       defaultValue: true,
     })
     .addBooleanSwitch({
+      path: 'plotlyModebar',
+      name: 'Show Plotly Modebar',
+      description: 'Displays Plotlys modebar.',
+      defaultValue: true,
+    })
+    .addBooleanSwitch({
       path: 'showLegend',
       name: 'Show Legend',
       defaultValue: false,
